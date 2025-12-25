@@ -15,10 +15,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let isEditing = false;
 
+    // Use absolute URL for Live Server compatibility
+    const API_BASE = 'http://localhost:3000';
+
     // Fetch and Render Products
     const fetchProducts = async () => {
         try {
-            const response = await fetch('/api/products');
+            const response = await fetch(`${API_BASE}/api/products`);
             const products = await response.json();
             renderTable(products);
         } catch (error) {
@@ -77,12 +80,12 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             if (isEditing) {
                 const id = document.getElementById('product-id').value;
-                await fetch(`/api/products/${id}`, {
+                await fetch(`${API_BASE}/api/products/${id}`, {
                     method: 'PUT',
                     body: formData // No Content-Type header needed for FormData
                 });
             } else {
-                await fetch('/api/products', {
+                await fetch(`${API_BASE}/api/products`, {
                     method: 'POST',
                     body: formData
                 });
@@ -96,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Edit Product (Global function for onclick)
     window.editProduct = async (id) => {
-        const response = await fetch('/api/products');
+        const response = await fetch(`${API_BASE}/api/products`);
         const products = await response.json();
         const product = products.find(p => p.id === id);
 
@@ -122,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Delete Product
     window.deleteProduct = async (id) => {
         if (confirm('Are you sure you want to delete this drop?')) {
-            await fetch(`/api/products/${id}`, { method: 'DELETE' });
+            await fetch(`${API_BASE}/api/products/${id}`, { method: 'DELETE' });
             fetchProducts();
         }
     };

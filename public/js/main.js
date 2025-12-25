@@ -37,9 +37,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let products = [];
 
     // Fetch Products from API
+    // Use absolute URL for Live Server compatibility
+    const API_BASE = 'http://localhost:3000';
+
     const fetchProducts = async () => {
         try {
-            const response = await fetch('/api/products');
+            const response = await fetch(`${API_BASE}/api/products`);
             products = await response.json();
 
             // Initial Render based on page context

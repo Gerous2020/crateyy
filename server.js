@@ -33,6 +33,8 @@ const upload = multer({ storage: storage });
 
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
+// Also serve via /public to match physical path (for Live Server compatibility)
+app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
 
 // Data File Paths
@@ -135,7 +137,7 @@ app.get('/api/products', (req, res) => {
 app.post('/api/products', upload.single('image'), (req, res) => {
     const products = readJson(DATA_FILE);
 
-    let imagePath = req.file ? `/uploads/${req.file.filename}` : req.body.existingImage;
+    let imagePath = req.file ? `public/uploads/${req.file.filename}` : req.body.existingImage;
     if (!imagePath) imagePath = 'https://via.placeholder.com/300?text=No+Image'; // Fallback
 
     const newProduct = {
@@ -163,7 +165,7 @@ app.put('/api/products/:id', upload.single('image'), (req, res) => {
         // Prepare updated fields
         let imagePath = products[index].image; // Keep old image by default
         if (req.file) {
-            imagePath = `/uploads/${req.file.filename}`;
+            imagePath = `public/uploads/${req.file.filename}`;
         } else if (req.body.existingImage) {
             imagePath = req.body.existingImage;
         }

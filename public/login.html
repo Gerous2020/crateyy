@@ -129,9 +129,9 @@
 <body>
     <nav class="navbar" id="navbar">
         <div class="nav-container">
-            <div class="logo"><a href="index.html">CRATE<span style="color: var(--color-gold);">YY</span></a></div>
+            <div class="logo"><a href="../index.html">CRATE<span style="color: var(--color-gold);">YY</span></a></div>
             <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
+                <li><a href="../index.html">Home</a></li>
             </ul>
         </div>
     </nav>
@@ -218,6 +218,9 @@
             }
         }
 
+        // API Base URL
+        const API_BASE = 'http://localhost:3000';
+
         // Login Logic
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -226,7 +229,7 @@
             const errorMsg = document.getElementById('login-error');
 
             try {
-                const res = await fetch('/api/login', {
+                const res = await fetch(`${API_BASE}/api/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password, role: currentRole })
@@ -239,7 +242,7 @@
                     if (data.user.role === 'admin') {
                         window.location.href = 'admin.html';
                     } else {
-                        window.location.href = 'index.html';
+                        window.location.href = '../index.html';
                     }
                 } else {
                     errorMsg.textContent = data.message;
@@ -258,7 +261,7 @@
             const errorMsg = document.getElementById('reg-error');
 
             try {
-                const res = await fetch('/api/register', {
+                const res = await fetch(`${API_BASE}/api/register`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, email, password, role: currentRole })
@@ -270,7 +273,7 @@
                     if (data.user.role === 'admin') {
                         window.location.href = 'admin.html';
                     } else {
-                        window.location.href = 'index.html';
+                        window.location.href = '../index.html';
                     }
                 } else {
                     errorMsg.textContent = data.message;
