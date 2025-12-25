@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRATEYY | Checkout</title>
+    <link rel="icon" href="data:,">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&family=Syne:wght@700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .checkout-container {
+            max-width: 900px;
+            margin: 120px auto 50px;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 40px;
+        }
+
+        @media(max-width: 768px) {
+            .checkout-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .checkout-form {
+            background: var(--color-dark-gray);
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        .order-summary {
+            background: #000;
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            height: fit-content;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background: #0E0E0E;
+            border: 1px solid #333;
+            color: white;
+            border-radius: 4px;
+            transition: 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: var(--color-gold);
+            outline: none;
+        }
+
+        .product-preview {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .product-preview img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 20px;
+            border-top: 1px solid #333;
+            padding-top: 15px;
+            color: var(--color-gold);
+        }
+
+        /* Loader */
+        .loader {
+            border: 3px solid #333;
+            border-top: 3px solid var(--color-gold);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: none;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="logo"><a href="index.html">CRATE<span style="color: var(--color-gold);">YY</span></a></div>
+            <ul class="nav-links">
+                <li><a href="index.html">Back to Shop</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="checkout-container">
+        <!-- Shipping & Payment -->
+        <div class="checkout-form">
+            <h2>Shipping Details</h2>
+            <div class="form-group"><label>Full Name</label><input type="text" id="name" required placeholder="Muhesh">
+            </div>
+            <div class="form-group"><label>Address</label><input type="text" id="address" required
+                    placeholder="123 Street, Chennai"></div>
+            <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div><label>City</label><input type="text" id="city" required></div>
+                <div><label>Pincode</label><input type="text" id="zip" required></div>
+            </div>
+
+            <h2 style="margin-top: 40px;">Payment Method</h2>
+            <div style="padding: 20px; background: #000; border: 1px solid #333; border-radius: 4px; color: #ccc;">
+                Secure Payment via <strong>Razorpay</strong> (UPI, Cards, NetBanking)
+            </div>
+
+            <button id="pay-btn" class="btn btn-primary"
+                style="width: 100%; margin-top: 20px; display: flex; justify-content: center; align-items: center;">
+                PROCEED TO PAY <span class="loader" id="loader"></span>
+            </button>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="order-summary">
+            <h2>Order Summary</h2>
+            <div id="product-details">
+                <!-- Injected via JS -->
+            </div>
+            <div class="total-row">
+                <span>Total</span>
+                <span id="total-price">₹0.00</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Razorpay SDK -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <script>
+        // Load Item
+        const item = JSON.parse(localStorage.getItem('checkoutItem'));
+        if (!item) window.location.href = 'index.html';
+
+        // Calculate Price (Handle String/Number)
+        let price = typeof item.price === 'string' ? parseFloat(item.price.replace(/[^0-9.]/g, '')) : item.price;
+        if (item.discount > 0) price = price * (1 - item.discount / 100);
+
+        // Render Summary
+        document.getElementById('product-details').innerHTML = `
+            <div class="product-preview">
+                <img src="${item.image}" alt="${item.name}">
+                <div>
+                    <h4>${item.name}</h4>
+                    <p style="color: #888;">Qty: 1</p>
+                    <p>₹${price.toFixed(2)}</p>
+                </div>
+            </div>
+        `;
+        document.getElementById('total-price').innerText = `₹${price.toFixed(2)}`;
+
+        // Razorpay Payment Logic
+        document.getElementById('pay-btn').addEventListener('click', async () => {
+            const btn = document.getElementById('pay-btn');
+            const name = document.getElementById('name').value;
+
+            // Simple Validation
+            if (!name || !document.getElementById('address').value) {
+                alert('Please enter shipping details.');
+                return;
+            }
+
+            btn.disabled = true;
+
+            try {
+                // 1. Get Key ID
+                const keyRes = await fetch('/api/razorpay-key');
+                const keyData = await keyRes.json();
+
+                // 2. Create Order
+                const res = await fetch('/api/create-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount: price })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    const options = {
+                        "key": keyData.key,
+                        "amount": data.order.amount,
+                        "currency": "INR",
+                        "name": "CRATEYY",
+                        "description": "Purchase Description",
+                        "image": "https://example.com/logo.png", // Use your logo if available
+                        "order_id": data.order.id,
+                        "handler": function (response) {
+                            alert(`Payment Successful! Payment ID: ${response.razorpay_payment_id}`);
+                            window.location.href = 'index.html';
+                        },
+                        "prefill": {
+                            "name": name,
+                            "email": "user@example.com",
+                            "contact": "9999999999"
+                        },
+                        "theme": {
+                            "color": "#F9A825"
+                        }
+                    };
+                    const rzp1 = new Razorpay(options);
+                    rzp1.open();
+
+                    rzp1.on('payment.failed', function (response) {
+                        alert("Payment Failed: " + response.error.description);
+                        btn.disabled = false;
+                    });
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Something went wrong. Check server/keys.');
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+
+</html>

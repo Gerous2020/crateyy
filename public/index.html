@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRATEYY | Premium Men's Fashion</title>
+    <link rel="icon" href="data:,">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="logo">CRATE<span style="color: var(--color-gold);">YY</span></div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#shop">Shop All</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+            <div class="nav-icons">
+                <a href="#" aria-label="Search"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg></a>
+                <a href="#" aria-label="Cart"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg></a>
+                <a href="login.html" aria-label="Profile"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg></a>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero" id="home">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-title fade-in-up">OWN THE <br> CONCRETE JUNGLE</h1>
+            <p class="hero-subtitle fade-in-up delay-1">Unapologetic style for the modern rebel. Limited drops only.</p>
+            <a href="#categories" class="btn btn-primary fade-in-up delay-2">COP THE DROP</a>
+        </div>
+    </header>
+
+    <!-- Category Section -->
+    <section class="section" id="categories" style="padding-top: var(--spacing-lg);">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">SHOP BY CATEGORY</h2>
+            </div>
+            <div class="category-grid"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                <a href="tshirts.html" class="category-card"
+                    style="height: 300px; position: relative; display: block; overflow: hidden; border-radius: 8px;">
+                    <div class="overlay"
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1;">
+                    </div>
+                    <img src="https://images.unsplash.com/photo-1540221652346-e5dd6b50f3e7?q=80&w=800&auto=format&fit=crop"
+                        style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s;"
+                        alt="T-Shirts">
+                    <h3
+                        style="position: absolute; bottom: 20px; left: 20px; z-index: 2; color: #fff; font-size: 2rem; font-family: var(--font-logo);">
+                        TSHIRTS</h3>
+                </a>
+                <a href="shirts.html" class="category-card"
+                    style="height: 300px; position: relative; display: block; overflow: hidden; border-radius: 8px;">
+                    <div class="overlay"
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1;">
+                    </div>
+                    <img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?q=80&w=800&auto=format&fit=crop"
+                        style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s;" alt="Shirts">
+                    <h3
+                        style="position: absolute; bottom: 20px; left: 20px; z-index: 2; color: #fff; font-size: 2rem; font-family: var(--font-logo);">
+                        SHIRTS</h3>
+                </a>
+                <a href="trousers.html" class="category-card"
+                    style="height: 300px; position: relative; display: block; overflow: hidden; border-radius: 8px;">
+                    <div class="overlay"
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1;">
+                    </div>
+                    <img src="https://images.unsplash.com/photo-1517438476312-10d79c077509?q=80&w=800&auto=format&fit=crop"
+                        style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s;"
+                        alt="Trousers">
+                    <h3
+                        style="position: absolute; bottom: 20px; left: 20px; z-index: 2; color: #fff; font-size: 2rem; font-family: var(--font-logo);">
+                        TROUSERS</h3>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- New Drops Section -->
+    <section class="section" id="new-arrivals">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">FRESH DROPS</h2>
+                <a href="#shop" class="view-all">SEE ALL</a>
+            </div>
+            <div class="product-grid" id="new-drops-grid">
+                <!-- Products injected via JS -->
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <div class="placeholder-image"></div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Oversized Tee</h3>
+                        <p>₹45.00</p>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <div class="placeholder-image"></div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Cargo Joggers</h3>
+                        <p>₹85.00</p>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <div class="placeholder-image"></div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Urban Hoodie</h3>
+                        <p>₹95.00</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Editorial / Feature Banner -->
+    <section class="editorial-banner">
+        <div class="banner-content">
+            <h2>THE UNDERGROUND EDIT</h2>
+            <p>Curated for those who move differently.</p>
+            <a href="#" class="btn btn-outline">DISCOVER</a>
+        </div>
+    </section>
+
+    <!-- Best Sellers -->
+    <section class="section" id="shop">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Best Sellers</h2>
+            </div>
+            <div class="product-grid" id="best-sellers-grid">
+                <!-- Products injected via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h3>CRATEYY</h3>
+                <p>Redefining urban luxury.</p>
+            </div>
+            <div class="footer-links">
+                <div class="link-group">
+                    <h4>Shop</h4>
+                    <a href="#">New Arrivals</a>
+                    <a href="#">Best Sellers</a>
+                    <a href="#">Accessories</a>
+                </div>
+                <div class="link-group">
+                    <h4>Support</h4>
+                    <a href="#">Contact Us</a>
+                    <a href="#">Shipping</a>
+                    <a href="#">Returns</a>
+                </div>
+                <div class="link-group">
+                    <h4>Social</h4>
+                    <a href="#">Instagram</a>
+                    <a href="#">Twitter</a>
+                    <a href="#">TikTok</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 CRATEYY. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Search Overlay -->
+    <div id="search-overlay" class="search-overlay">
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search for streetwear...">
+
+            <div class="search-filters" style="display: flex; gap: 10px; margin-top: 15px; justify-content: center;">
+                <select id="search-category">
+                    <option value="all">All Categories</option>
+                    <option value="t-shirt">T-Shirts</option>
+                    <option value="shirt">Shirts</option>
+                    <option value="trouser">Trousers</option>
+                </select>
+                <select id="search-price">
+                    <option value="all">All Prices</option>
+                    <option value="0-50">Under ₹50</option>
+                    <option value="50-100">₹50 - ₹100</option>
+                    <option value="100+">Above ₹100</option>
+                </select>
+            </div>
+
+            <button id="close-search" class="close-btn">&times;</button>
+        </div>
+        <div id="recent-searches" class="recent-searches"></div>
+        <div id="search-results" class="search-results"></div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRATEYY | Admin</title>
+    <link rel="icon" href="data:,">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&family=Syne:wght@700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            padding-top: 100px;
+        }
+
+        /* Offset for fixed navbar */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 3000;
+        }
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: var(--color-dark-gray);
+            padding: 40px;
+            border-radius: 8px;
+            width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--color-text-muted);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            background: #000;
+            border: 1px solid #333;
+            color: white;
+            font-family: var(--font-body);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="logo"><a href="index.html">CRATE<span style="color: var(--color-gold);">YY</span></a></div>
+            <ul class="nav-links">
+                <li><a href="index.html">View Site</a></li>
+                <li><a href="#" style="color: var(--color-gold);">Admin Panel</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">PRODUCT DASHBOARD</h2>
+            <button class="btn btn-primary" id="add-product-btn">ADD NEW DROP</button>
+        </div>
+
+        <div class="admin-table-container">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Category</th>
+                        <th>Type</th>
+                        <th>Discount</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-products-body">
+                    <!-- Products injected via JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div class="modal" id="product-modal">
+        <div class="modal-content">
+            <h3 id="modal-title" style="margin-bottom: 20px;">Edit Product</h3>
+            <form id="product-form">
+                <input type="hidden" id="product-id">
+                <div class="form-group">
+                    <label>Product Name</label>
+                    <input type="text" id="p-name" required>
+                </div>
+                <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <label>Price (₹)</label>
+                        <input type="number" step="0.01" id="p-price" required>
+                    </div>
+                    <div>
+                        <label>Discount (%)</label>
+                        <input type="number" id="p-discount" value="0">
+                    </div>
+                </div>
+                <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <label>Category</label>
+                        <select id="p-category">
+                            <option value="new-drops">New Drops</option>
+                            <option value="best-sellers">Best Sellers</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Type</label>
+                        <select id="p-type">
+                            <option value="t-shirt">T-Shirt</option>
+                            <option value="shirt">Shirt</option>
+                            <option value="trouser">Trouser</option>
+                            <option value="accessory">Accessory</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Product Image</label>
+                    <input type="file" id="p-image-file" accept="image/*">
+                    <input type="hidden" id="p-existing-image"> <!-- To keep old image on edit -->
+                    <small style="color: #666; display: block; margin-top: 5px;">Upload from your device</small>
+                </div>
+                <div style="text-align: right;">
+                    <button type="button" class="btn btn-outline" id="close-modal"
+                        style="margin-right: 10px;">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+
+</html>

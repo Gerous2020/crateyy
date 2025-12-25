@@ -1,0 +1,706 @@
+/* CSS Variables */
+:root {
+    --color-black: #000000;
+    --color-dark-gray: #0E0E0E;
+    /* Charcoal Black */
+    --color-white: #F2F2F2;
+    /* Off White */
+    --color-gold: #F9A825;
+    /* Vibrant Orange (Brand Highlight) */
+    --color-gold-hover: #D97706;
+    /* Deep Amber (Hover) */
+    --color-text-muted: #BDBDBD;
+    /* Light Grey */
+    --color-text-body: #BDBDBD;
+    /* Using Light Grey for body text on dark headers/etc */
+
+    --font-heading: 'Playfair Display', serif;
+    --font-logo: 'Syne', sans-serif;
+    /* Funky Street Font */
+    --font-subheading: 'Poppins', sans-serif;
+    --font-body: 'Inter', sans-serif;
+
+    --spacing-xs: 8px;
+    --spacing-sm: 16px;
+    --spacing-md: 32px;
+    --spacing-lg: 64px;
+    --spacing-xl: 120px;
+
+    --container-width: 1400px;
+    --border-radius: 8px;
+
+    --transition-fast: 0.3s ease;
+    --transition-smooth: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Reset & Base */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--color-black);
+    /* Dark Theme */
+    color: var(--color-white);
+    /* Light Text */
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+::selection {
+    background: var(--color-gold);
+    color: var(--color-black);
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transition-fast);
+}
+
+ul {
+    list-style: none;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+h4 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+h1 {
+    font-size: clamp(3rem, 5vw, 5rem);
+    letter-spacing: -0.02em;
+}
+
+h2 {
+    font-size: 2.5rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+h3 {
+    font-family: var(--font-subheading);
+    font-weight: 600;
+    font-size: 1.25rem;
+    letter-spacing: 0.05em;
+}
+
+p {
+    font-size: 1rem;
+    color: var(--color-text-body);
+}
+
+.container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 var(--spacing-sm);
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 14px 32px;
+    font-family: var(--font-subheading);
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    font-weight: 500;
+    border-radius: 50px;
+    /* Pillow shape for modern look */
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.btn-primary {
+    background-color: var(--color-white);
+    /* Keep white for high contrast or use Gold? User said CTA = Orange. */
+    background-color: var(--color-gold);
+    /* Using Vibrant Orange for primary buttons */
+    color: var(--color-black);
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    background-color: var(--color-gold-hover);
+    color: var(--color-white);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(249, 168, 37, 0.3);
+    /* Orange glow */
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 1px solid var(--color-text-muted);
+    color: var(--color-white);
+}
+
+.btn-outline:hover {
+    background-color: var(--color-white);
+    color: var(--color-black);
+}
+
+/* Navbar */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 20px 0;
+    transition: var(--transition-fast);
+    color: var(--color-white);
+    /* Initial state on dark hero */
+}
+
+.navbar.scrolled {
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 15px 0;
+    backdrop-filter: blur(10px);
+}
+
+.nav-container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 var(--spacing-sm);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-family: var(--font-logo);
+    font-size: 2rem;
+    /* Larger for impact */
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    /* Tight spacing for street look */
+    text-transform: uppercase;
+}
+
+.nav-links {
+    display: flex;
+    gap: 40px;
+}
+
+.nav-links li a {
+    font-family: var(--font-subheading);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    position: relative;
+}
+
+.nav-links li a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background-color: var(--color-gold);
+    transition: width var(--transition-fast);
+}
+
+.nav-links li a:hover::after {
+    width: 100%;
+}
+
+.nav-icons {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.hamburger {
+    display: none;
+    cursor: pointer;
+}
+
+/* Hero Section */
+.hero {
+    height: 100vh;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    /* Left aligned */
+    padding-left: 10%;
+    /* Offset from left */
+    /* Fallback background if image fails/loads */
+    background-color: var(--color-black);
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.8)), url('../assets/IMG_15621.jpeg');
+    /* Placeholder Luxury Streetwear Image */
+    background-size: cover;
+    background-position: center;
+    color: var(--color-white);
+}
+
+.hero-content {
+    max-width: 600px;
+    z-index: 2;
+}
+
+.hero-title {
+    margin-bottom: 20px;
+}
+
+.hero-subtitle {
+    font-family: var(--font-subheading);
+    font-size: 1.1rem;
+    margin-bottom: 40px;
+    opacity: 0.9;
+    font-weight: 300;
+}
+
+/* Feature Sections */
+.section {
+    padding: var(--spacing-xl) 0;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: var(--spacing-lg);
+}
+
+.section-title {
+    font-size: 2.5rem;
+}
+
+.view-all {
+    font-family: var(--font-subheading);
+    font-size: 0.9rem;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+}
+
+.product-card {
+    cursor: pointer;
+}
+
+.product-image-container {
+    height: 450px;
+    background-color: var(--color-dark-gray);
+    /* Darker placeholder */
+    margin-bottom: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+.placeholder-image {
+    width: 100%;
+    height: 100%;
+    background-color: #e0e0e0;
+    /* Placeholder gray */
+    transition: transform var(--transition-smooth);
+}
+
+.product-card:hover .placeholder-image {
+    transform: scale(1.05);
+    /* Zoom effect */
+}
+
+.product-info h3 {
+    margin-bottom: 5px;
+}
+
+.product-info p {
+    font-family: var(--font-subheading);
+    font-weight: 500;
+    color: var(--color-text-muted);
+    /* Muted text for price/details */
+}
+
+/* Editorial Banner */
+.editorial-banner {
+    height: 70vh;
+    background-color: var(--color-dark-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--color-white);
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../assets/re/IMG_1568.jpeg');
+    /* Neon/Night Street */
+    background-size: cover;
+    background-position: center;
+}
+
+.banner-content h2 {
+    font-size: 4rem;
+    margin-bottom: 20px;
+}
+
+.banner-content p {
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Footer */
+.footer {
+    background-color: var(--color-dark-gray);
+    /* Using Charcoal for Footer to distinguish */
+    color: var(--color-white);
+    padding: var(--spacing-lg) 0 20px;
+}
+
+.footer-container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 var(--spacing-sm) var(--spacing-lg);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 60px;
+}
+
+.footer-brand h3 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.footer-links {
+    display: flex;
+    gap: 80px;
+}
+
+.link-group h4 {
+    margin-bottom: 20px;
+    font-family: var(--font-subheading);
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.link-group a {
+    display: block;
+    margin-bottom: 10px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+}
+
+.link-group a:hover {
+    color: var(--color-white);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Animations */
+.fade-in-up {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.delay-1 {
+    animation-delay: 0.2s;
+}
+
+.delay-2 {
+    animation-delay: 0.4s;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsiveness */
+@media (max-width: 1200px) {
+    h1 {
+        font-size: 4rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 15px 0;
+        background-color: var(--color-black);
+        /* Always dark on mobile for visibility */
+    }
+
+    .nav-links {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background-color: var(--color-black);
+        flex-direction: column;
+        align-items: center;
+        padding: 40px 0;
+        gap: 30px;
+        transform: translateY(-100%);
+        /* Hidden by default */
+        opacity: 0;
+        transition: all 0.5s ease;
+        z-index: -1;
+    }
+
+    .nav-links.active {
+        transform: translateY(0);
+        opacity: 1;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .nav-icons {
+        display: none;
+        /* Hide icons in header on mobile */
+    }
+
+    .nav-icons.active {
+        display: flex;
+        justify-content: center;
+        padding-bottom: 20px;
+        background-color: var(--color-black);
+        width: 100%;
+        position: absolute;
+        top: calc(100% + 250px);
+        /* Position after links */
+        left: 0;
+    }
+
+    .hamburger {
+        display: block;
+        width: 30px;
+        height: 20px;
+        position: relative;
+        z-index: 1001;
+    }
+
+    .hamburger span {
+        display: block;
+        width: 100%;
+        height: 2px;
+        background-color: var(--color-white);
+        margin-bottom: 6px;
+        transition: all 0.3s ease;
+    }
+
+    .hero {
+        padding-left: 0;
+        justify-content: center;
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    .banner-content h2 {
+        font-size: 2.5rem;
+    }
+
+    .footer-container {
+        flex-direction: column;
+        gap: 40px;
+    }
+
+    .footer-links {
+        flex-direction: column;
+        gap: 30px;
+        text-align: center;
+    }
+
+    .footer-brand {
+        text-align: center;
+    }
+}
+
+/* Product Image Styles */
+.product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-smooth);
+}
+
+.product-card:hover .product-img {
+    transform: scale(1.1);
+}
+
+.visible {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
+/* Category Card Animations */
+.category-card:hover img {
+    transform: scale(1.1);
+}
+
+
+/* Search Overlay */
+.search-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 100px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    overflow-y: auto;
+    /* Enable scrolling */
+}
+
+.search-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.search-container {
+    width: 100%;
+    max-width: 800px;
+    position: relative;
+    border-bottom: 2px solid var(--color-gold);
+}
+
+#search-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    font-family: var(--font-logo);
+    font-size: 2rem;
+    color: var(--color-white);
+    padding: 20px;
+    outline: none;
+    text-transform: uppercase;
+}
+
+.search-filters select {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-white);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-family: var(--font-subheading);
+    cursor: pointer;
+    outline: none;
+}
+
+.search-filters select:focus {
+    border-color: var(--color-gold);
+}
+
+.search-filters select option {
+    background: var(--color-black);
+    color: var(--color-white);
+}
+
+.close-btn {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--color-white);
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.recent-searches {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    max-width: 800px;
+}
+
+.search-tag {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-white);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.search-tag:hover {
+    background: var(--color-gold);
+    color: var(--color-black);
+    border-color: var(--color-gold);
+}
+
+.search-results {
+    margin-top: 50px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 1000px;
+    padding: 0 20px;
+}
+
+/* Admin Dashboard Styles (Pre-emptive) */
+.admin-table-container {
+    overflow-x: auto;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    color: var(--color-white);
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 15px;
+    border-bottom: 1px solid #333;
+    text-align: left;
+}
+
+.discount-badge {
+    background-color: var(--color-gold);
+    color: #000;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-left: 5px;
+}
