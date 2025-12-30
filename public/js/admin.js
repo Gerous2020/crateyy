@@ -15,8 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let isEditing = false;
 
-    // Use absolute URL for Live Server compatibility
-    const API_BASE = 'http://localhost:3000';
+    // Use relative URL for Production
+    const API_BASE = '';
 
     // Fetch and Render Products
     const fetchProducts = async () => {

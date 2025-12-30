@@ -37,8 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let products = [];
 
     // Fetch Products from API
-    // Use absolute URL for Live Server compatibility
-    const API_BASE = 'http://localhost:3000';
+    // Use relative URL for Production (same domain)
+    const API_BASE = '';
 
     const fetchProducts = async () => {
         try {

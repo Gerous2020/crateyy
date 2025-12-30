@@ -6,8 +6,17 @@ const Razorpay = require('razorpay'); // Razorpay
 const cors = require('cors');
 require('dotenv').config(); // Load Env
 
+const mongoose = require('mongoose');
+const Product = require('./models/Product');
+const User = require('./models/User');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Connect to MongoDB
+mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/crateyy')
+    .then(() => console.log('MongoDB Connected'))
+    .catch(err => console.error('MongoDB Connection Error:', err));
 
 app.use(cors());
 // Middleware for parsing JSON bodies
@@ -37,70 +46,54 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
 
-// Data File Paths
-const DATA_FILE = path.join(__dirname, 'data', 'products.json');
-const USERS_FILE = path.join(__dirname, 'data', 'users.json');
-
-// Helper: Read Data (Generic)
-const readJson = (filePath) => {
-    try {
-        const data = fs.readFileSync(filePath, 'utf8');
-        return JSON.parse(data);
-    } catch (err) {
-        return [];
-    }
-};
-
-// Helper: Write Data (Generic)
-const writeJson = (filePath, data) => {
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 4));
-};
+// --- AUTHENTICATION ROUTES ---
 
 // --- AUTHENTICATION ROUTES ---
 
 // API: Login
-app.post('/api/login', (req, res) => {
+app.post('/api/login', async (req, res) => {
     const { email, password, role } = req.body;
-    const users = readJson(USERS_FILE);
 
-    // Find user matching email, password, and (optional) role
-    const user = users.find(u => u.email === email && u.password === password);
+    try {
+        const user = await User.findOne({ email, password }); // Find user
 
-    if (user) {
-        // If role is specified, verify it matches
-        if (role && user.role !== role) {
-            return res.status(403).json({ message: 'Unauthorized role access' });
+        if (user) {
+            // Role Check
+            if (role && user.role !== role) {
+                return res.status(403).json({ message: 'Unauthorized role access' });
+            }
+            res.json({ success: true, user: { name: user.name, email: user.email, role: user.role } });
+        } else {
+            res.status(401).json({ success: false, message: 'Invalid credentials' });
         }
-        // Return user info (excluding password)
-        const { password, ...userWithoutPass } = user;
-        res.json({ success: true, user: userWithoutPass });
-    } else {
-        res.status(401).json({ success: false, message: 'Invalid credentials' });
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Server error' });
     }
 });
 
 // API: Register
-app.post('/api/register', (req, res) => {
+app.post('/api/register', async (req, res) => {
     const { name, email, password, role } = req.body;
-    const users = readJson(USERS_FILE);
 
-    if (users.find(u => u.email === email)) {
-        return res.status(400).json({ success: false, message: 'Email already exists' });
+    try {
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ success: false, message: 'Email already exists' });
+        }
+
+        const newUser = new User({
+            name,
+            email,
+            password, // In prod, hash this!
+            role: role || 'customer'
+        });
+
+        await newUser.save();
+
+        res.status(201).json({ success: true, user: { name: newUser.name, email: newUser.email, role: newUser.role } });
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Server error' });
     }
-
-    const newUser = {
-        id: Date.now(),
-        name,
-        email,
-        password,
-        role: role || 'customer' // Default to customer
-    };
-
-    users.push(newUser);
-    writeJson(USERS_FILE, users);
-
-    const { password: _, ...userWithoutPass } = newUser;
-    res.status(201).json({ success: true, user: userWithoutPass });
 });
 
 // --- RAZORPAY PAYMENT ---
@@ -127,74 +120,81 @@ app.get('/api/razorpay-key', (req, res) => {
 
 // --- PRODUCT ROUTES ---
 
+// --- PRODUCT ROUTES ---
+
 // API: Get All Products
-app.get('/api/products', (req, res) => {
-    const products = readJson(DATA_FILE);
-    res.json(products);
+app.get('/api/products', async (req, res) => {
+    try {
+        const products = await Product.find();
+        res.json(products);
+    } catch (err) {
+        res.status(500).json({ message: 'Error fetching products' });
+    }
 });
 
 // API: Add Product
-app.post('/api/products', upload.single('image'), (req, res) => {
-    const products = readJson(DATA_FILE);
-
+app.post('/api/products', upload.single('image'), async (req, res) => {
     let imagePath = req.file ? `public/uploads/${req.file.filename}` : req.body.existingImage;
-    if (!imagePath) imagePath = 'https://via.placeholder.com/300?text=No+Image'; // Fallback
+    if (!imagePath) imagePath = 'https://via.placeholder.com/300?text=No+Image';
 
-    const newProduct = {
-        id: Date.now(),
+    const newProduct = new Product({
+        id: Date.now(), // Keeping custom ID logic for now
         name: req.body.name,
         price: req.body.price,
         discount: req.body.discount,
         category: req.body.category,
         type: req.body.type,
         image: imagePath
-    };
+    });
 
-    products.push(newProduct);
-    writeJson(DATA_FILE, products);
-    res.status(201).json(newProduct);
+    try {
+        await newProduct.save();
+        res.status(201).json(newProduct);
+    } catch (err) {
+        res.status(400).json({ message: 'Error saving product' });
+    }
 });
 
 // API: Update Product
-app.put('/api/products/:id', upload.single('image'), (req, res) => {
-    const products = readJson(DATA_FILE);
+app.put('/api/products/:id', upload.single('image'), async (req, res) => {
     const id = parseInt(req.params.id);
-    const index = products.findIndex(p => p.id === id);
 
-    if (index !== -1) {
-        // Prepare updated fields
-        let imagePath = products[index].image; // Keep old image by default
-        if (req.file) {
-            imagePath = `public/uploads/${req.file.filename}`;
-        } else if (req.body.existingImage) {
-            imagePath = req.body.existingImage;
+    try {
+        const product = await Product.findOne({ id: id });
+        if (product) {
+            let imagePath = product.image;
+            if (req.file) {
+                imagePath = `public/uploads/${req.file.filename}`;
+            } else if (req.body.existingImage) {
+                imagePath = req.body.existingImage;
+            }
+
+            product.name = req.body.name || product.name;
+            product.price = req.body.price || product.price;
+            product.discount = req.body.discount || product.discount;
+            product.category = req.body.category || product.category;
+            product.type = req.body.type || product.type;
+            product.image = imagePath;
+
+            await product.save();
+            res.json(product);
+        } else {
+            res.status(404).json({ message: 'Product not found' });
         }
-
-        const updatedProduct = {
-            ...products[index],
-            name: req.body.name || products[index].name,
-            price: req.body.price || products[index].price,
-            discount: req.body.discount || products[index].discount,
-            category: req.body.category || products[index].category,
-            type: req.body.type || products[index].type,
-            image: imagePath
-        };
-
-        products[index] = updatedProduct;
-        writeJson(DATA_FILE, products);
-        res.json(updatedProduct);
-    } else {
-        res.status(404).json({ message: 'Product not found' });
+    } catch (err) {
+        res.status(500).json({ message: 'Error updating product' });
     }
 });
 
 // API: Delete Product
-app.delete('/api/products/:id', (req, res) => {
-    let products = readJson(DATA_FILE);
+app.delete('/api/products/:id', async (req, res) => {
     const id = parseInt(req.params.id);
-    products = products.filter(p => p.id !== id);
-    writeJson(DATA_FILE, products);
-    res.json({ message: 'Deleted successfully' });
+    try {
+        await Product.deleteOne({ id: id });
+        res.json({ message: 'Deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ message: 'Error deleting product' });
+    }
 });
 
 // Fallback
