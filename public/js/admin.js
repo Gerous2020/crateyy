@@ -15,8 +15,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let isEditing = false;
 
-    // Use relative URL for Production
-    const API_BASE = '';
+    // Smart API Base: 
+    // If on Live Server (5500), point to Node Server (3000). 
+    // If on Node Server or Production, use relative path.
+    const API_BASE = (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') && window.location.port !== '3000'
+        ? 'http://localhost:3000'
+        : '';
 
     // Fetch and Render Products
     const fetchProducts = async () => {

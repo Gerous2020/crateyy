@@ -13,6 +13,12 @@ const User = require('./models/User');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Ensure Uploads Directory Exists
+const uploadDir = path.join(__dirname, 'public', 'uploads');
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
+
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/crateyy')
     .then(() => console.log('MongoDB Connected'))
