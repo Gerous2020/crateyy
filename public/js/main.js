@@ -112,8 +112,32 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'checkout.html';
     };
 
+    // Check for Active Session (Google Login or Local)
+    const checkSession = async () => {
+        // First check local storage (Legacy/Local Login)
+        const localUser = localStorage.getItem('user');
+
+        // Then check Valid Server Session (Cookies - for Google Login)
+        try {
+            const res = await fetch(`${API_BASE}/api/current_user`);
+            const user = await res.json();
+
+            if (user) {
+                // If Google Login session exists, ensure it syncs with UI
+                localStorage.setItem('user', JSON.stringify(user));
+                return user; // Active session found
+            }
+        } catch (e) {
+            // No active session or API error
+            // console.log("No active server session");
+        }
+
+        return localUser ? JSON.parse(localUser) : null;
+    };
+
     // Initialize
     fetchProducts();
+    checkSession();
 
     // Search Functionality
     const searchOverlay = document.getElementById('search-overlay');

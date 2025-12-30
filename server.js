@@ -18,10 +18,78 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/crateyy')
     .then(() => console.log('MongoDB Connected'))
     .catch(err => console.error('MongoDB Connection Error:', err));
 
+// Auth Packages
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const session = require('express-session');
+
 app.use(cors());
 // Middleware for parsing JSON bodies
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Session Config (Required for Passport)
+app.use(session({
+    secret: 'crateyy_secret_key', // Change this in prod
+    resave: false,
+    saveUninitialized: false
+}));
+
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Passport Config
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "/auth/google/callback"
+},
+    async (accessToken, refreshToken, profile, done) => {
+        try {
+            // Check if user exists
+            let user = await User.findOne({ googleId: profile.id });
+
+            if (user) {
+                return done(null, user);
+            }
+
+            // If not, check by email
+            user = await User.findOne({ email: profile.emails[0].value });
+            if (user) {
+                // Link Google ID to existing email account
+                user.googleId = profile.id;
+                await user.save();
+                return done(null, user);
+            }
+
+            // Create new user
+            user = new User({
+                googleId: profile.id,
+                name: profile.displayName,
+                email: profile.emails[0].value,
+                role: 'customer' // Default role
+            });
+            await user.save();
+            done(null, user);
+        } catch (err) {
+            done(err, null);
+        }
+    }));
+
+// Serialize/Deserialize User for Session
+passport.serializeUser((user, done) => {
+    done(null, user.id);
+});
+
+passport.deserializeUser(async (id, done) => {
+    try {
+        const user = await User.findById(id);
+        done(null, user);
+    } catch (err) {
+        done(err, null);
+    }
+});
 
 // Configure Razorpay
 const razorpay = new Razorpay({
@@ -49,6 +117,33 @@ app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
 // --- AUTHENTICATION ROUTES ---
 
 // --- AUTHENTICATION ROUTES ---
+
+// API: Google Auth Route
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+// API: Google Auth Callback
+app.get('/auth/google/callback',
+    passport.authenticate('google', { failureRedirect: '/public/login.html' }),
+    (req, res) => {
+        // Successful authentication
+        // Redirect to a page that will handle storing the session/token if needed
+        // For simple session flow, just redirect to home
+        res.redirect('/index.html');
+    }
+);
+
+// API: Check Session (For frontend to know if logged in)
+app.get('/api/current_user', (req, res) => {
+    res.json(req.user || null);
+});
+
+// API: Logout
+app.get('/api/logout', (req, res) => {
+    req.logout((err) => {
+        if (err) return next(err);
+        res.redirect('/');
+    });
+});
 
 // API: Login
 app.post('/api/login', async (req, res) => {
